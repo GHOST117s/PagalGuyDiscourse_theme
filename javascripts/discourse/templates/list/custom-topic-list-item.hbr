@@ -1,0 +1,131 @@
+{{!-- this custom template is shared by mobile and desktop and is called for in common/header.html --}}
+
+{{#if bulkSelectEnabled}}
+<td class="bulk-select">
+  <input type="checkbox" class="bulk-select">
+</td>
+{{/if}}
+
+<div class='main-link topic-list-data clearfix pg-topic-list-data' colspan="1">
+
+  <div class="nt-cat-of-latest-topics">
+    {{#unless hideCategory}}
+    {{#unless topic.isPinnedUncategorized}}
+    {{category-link topic.category}}
+    {{/unless}}
+    {{/unless}}
+  </div>
+
+  <span class='link-top-line'>
+    
+    <div class="link-middle-line" id='{{#if topic.hasExcerpt}}link-middle-line-excerpt{{/if}}' >
+      <div class="topic-title">
+        {{~raw "topic-status" topic=topic}}
+        {{~topic-link topic class="raw-link raw-topic-link"}}
+        {{~#if topic.featured_link}}
+        {{~topic-featured-link topic}}
+        {{~/if}}
+        {{~#if showTopicPostBadges}}
+        {{~raw "topic-post-badges" unreadPosts=topic.unread_posts unseen=topic.unseen url=topic.lastUnreadUrl newDotText=newDotText}}
+        {{~/if}}
+      </div>
+
+      {{~raw-plugin-outlet name="topic-list-after-title"}}
+      {{#if topic.hasExcerpt}}
+      <div class="topic-excerpt hide">
+        {{raw "list/topic-excerpt" topic=topic}}
+      </div>
+      {{/if}}
+      {{#if topic.image_url}}
+      <div class="topic-image">
+        <img src="{{topic.image_url}}" />
+      </div>
+      {{/if}}
+      {{discourse-tags topic mode="list" tagsForUser=tagsForUser}}
+    </div>
+    
+    <div class="byline">
+      <div class="author hide">
+        {{~raw-plugin-outlet name="topic-list-before-status"}}
+        <a href="{{topic.posters.[0].user.userPath}}" data-user-card="{{topic.posters.[0].user.username}}">
+          {{avatar topic.posters.[0].user imageSize='medium'}}
+          <div class="name-and-date">
+            <span class="username">{{topic.posters.[0].user.username}}</span>
+            {{format-date topic.createdAt format="tiny"}}
+          </div>
+        </a>
+      </div>
+
+      <div class="foot">
+        <div class="stat">
+          <div class="like-and-comment">
+            <div class="nt-cat-of-sugest-topics" style="display: none">
+              {{#unless hideCategory}}
+              {{#unless topic.isPinnedUncategorized}}
+              {{category-link topic.category}}
+              {{/unless}}
+              {{/unless}}
+              <span class="nt-topic-update-time">{{format-date topic.createdAt format="tiny"}}</span>  
+            </div>
+
+            <p class="like-count cstm-box">
+              {{#if (eq topic.like_count 0)}}
+              {{d-icon "far-heart" class="cstm-icon"}}
+              {{else}}
+              {{d-icon "heart" class="cstm-icon"}}
+              {{/if}}
+              <span style="font-size: 0.9rem;">
+                {{number topic.like_count}}
+              </span>
+            </p>
+
+            <a class="cstm-box-1" href={{topic.url}}>
+              <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" data-prefix="fas" data-icon="message"
+                class="svg-inline--fa fa-home fa-w-18" role="img" width="15" height="15" viewBox="0 0 512 512">
+                <path fill="#c2c2c2"
+                  d="M64 0C28.7 0 0 28.7 0 64V352c0 35.3 28.7 64 64 64h96v80c0 6.1 3.4 11.6 8.8 14.3s11.9 2.1 16.8-1.5L309.3 416H448c35.3 0 64-28.7 64-64V64c0-35.3-28.7-64-64-64H64z" />
+              </svg>
+              {{!-- {{d-icon "comment" class="cstm-icon2"}} --}}
+              <span style="font-size: 0.9rem;">
+                {{number topic.replyCount noTitle="true"}}
+              </span>
+            </a>
+          </div>
+          <p class="time-span">
+            {{d-icon "circle" class="cstm-icon2"}}
+            <span class="nt-updated-by">Last Updated by {{topic.lastPosterUser.username}}</span>
+            <span class="timeStamp">
+              ({{format-date topic.last_posted_at format="medium" noTitle="true"}})
+            </span>
+          </p>
+        </div>
+        <div class="user-stamps">
+          <div class="cstm-holder">
+            {{#each topic.posters as |poster|}}
+            <p class="user-icon-stack">
+              {{avatar poster avatarTemplatePath="user.avatar_template"
+              usernamePath="user.username" namePath="user.name" imageSize="small"}}
+            </p>
+            {{/each}}
+          </div>
+          <div class="timeStamp">
+            <p>Last Updated: {{format-date topic.last_posted_at format="medium" noTitle="true"}} </p>
+          </div>
+        </div>
+
+      </div>
+      
+
+    </div>
+  </span>
+  <div class="link-bottom-line hide">
+    {{raw "list/action-list" topic=topic postNumbers=topic.liked_post_numbers className="likes" icon="heart"}}
+
+    {{#if hasLikes}}
+    <a class="likes" href='{{topic.summaryUrl}}'>
+      {{number topic.like_count}} {{d-icon "heart"}}
+    </a>
+    {{/if}}
+    {{raw "list/posts-count-column" topic=topic}}
+  </div>
+</div>

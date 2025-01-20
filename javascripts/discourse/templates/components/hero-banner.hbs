@@ -1,0 +1,14 @@
+{{#if shouldDisplay}}
+  <div class="custom-pg-hero-banner">
+    <div class="wrap pg-hero-banner-wrap">
+      <h1 class="title">{{html-safe (theme-i18n "hero_banner.title")}}</h1>
+      <div class="signup-widget">{{html-safe (theme-i18n "hero_banner.signup_widget")}}</div>
+      <h2 class="subtitle">{{html-safe (theme-i18n "hero_banner.subtitle")}}</h2>
+    </div>
+  </div>
+{{else}}
+  <div class="custom-pg-hero-banner not-home-hero-banner">
+    <div class="wrap not-home-hero-banner"></div>
+  </div>
+
+{{/if}}

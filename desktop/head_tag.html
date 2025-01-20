@@ -1,0 +1,187 @@
+<script type="text/discourse-plugin" version="0.8">
+  window.pgyTransientDesktopAdSlots = [];
+  window.pgyPersistentDesktopAdSlots = [];
+  window.pgyRenderDesktopAdsEventRun = false;
+  window.pgyAdRenderTimeout = false;
+  window.pgySetupSearchButton = function () {
+    if(jQuery('li.search-dropdown > #search-button').length < 1)
+      return;
+    var $searchIcon = jQuery('li.search-dropdown > #search-button');
+    var $searchButton = jQuery('<li><a href="/search" title="Search" id="search-button" class="icon btn-flat">'+$searchIcon.html()+'</a></li>');
+    jQuery('li.search-dropdown > #search-button').parent().replaceWith($searchButton);
+    if(jQuery('#search-term')) {
+      jQuery('#search-term').attr('placeholder', 'Search Discussion');
+    }
+  };
+  window.pgySetupSearchButton();
+  jQuery(document).ajaxComplete(function(event, xhr, settings) {
+    window.pgySetupSearchButton();
+  });
+  window.pgySetupTopicLHSDesktopAdSlots = function () {
+    var $target = jQuery('#main-outlet .nt-latest-topic-list-wrap .topic-leftcolumn .nt-left-ad-content');
+    if($target.length < 1 || $target.hasClass('has-pg-ads'))
+      return;
+
+    console.log(111);
+    $target.prepend('<div class="pgy-ad-block pgy-ad-persistent 11" id="pgy-ads-lhs-1" style="width:200px;height:200px;margin:5px auto;" data-ad-unit="/1005587/pg_v9_default_lhs_1" data-ad-size="[200, 200]"></div>');
+    $target.prepend('<div class="pgy-ad-block pgy-ad-persistent 22" id="pgy-ads-lhs-2" style="width:200px;height:200px;margin:5px auto;" data-ad-unit="/1005587/pg_v9_default_lhs_2" data-ad-size="[200, 200]"></div>');
+    $target.addClass('has-pg-ads');
+  }
+  window.pgySetupTopicLHSDesktopAdSlots();
+
+  window.pgySetupTopicRHSDesktopAdSlots = function () {
+
+    var $target = jQuery('#main-outlet .nt-latest-topic-list-wrap .topic-rightcolumn .nt-right-ad-content');
+    if($target.length < 1 || $target.hasClass('has-pg-ads')) {
+      //
+    } else {
+      $target.append('<div style="display: flex; justify-content: space-around; flex-direction: row; align-items: center; flex: 1; gap: 10px;"><div class="pgy-ad-block pgy-ad-persistent" id="pgy-ads-rhs-1" style="width:120px;height:240px;margin:20px auto;" data-ad-unit="/1005587/Paagal_MBA_ALL_RHS_1" data-ad-size="[120, 240]"></div><div class="pgy-ad-block pgy-ad-persistent" id="pgy-ads-rhs-2" style="width:120px;height:240px;margin:20px auto;" data-ad-unit="/1005587/Paagal_MBA_ALL_RHS_2" data-ad-size="[120, 240]"></div></div>');
+      $target.append('<div style="display: flex; justify-content: space-around; flex-direction: row; align-items: center; flex: 1; gap: 10px;"><div class="pgy-ad-block pgy-ad-persistent" id="pgy-ads-rhs-3" style="width:120px;height:240px;margin:20px auto;" data-ad-unit="/1005587/Paagal_MBA_ALL_RHS_3" data-ad-size="[120, 240]"></div><div class="pgy-ad-block pgy-ad-persistent" id="pgy-ads-rhs-4" style="width:120px;height:240px;margin:20px auto;" data-ad-unit="/1005587/Paagal_MBA_ALL_RHS_4" data-ad-size="[120, 240]"></div></div>');
+      $target.addClass('has-pg-ads');
+    }
+
+  }
+  window.pgySetupTopicRHSDesktopAdSlots();
+
+  window.pgyRenderDesktopAds = function (force_reload) {
+    var force_reload = (typeof force_reload == "undefined") ? false : force_reload;
+    var populateDesktopAds = function () {
+      if (typeof window.pgyMobileAdSlots !== "undefined" && window.pgyMobileAdSlots.length > 0) {
+        googletag.destroySlots(window.pgyMobileAdSlots);
+      }
+      if (typeof window.pgyTransientDesktopAdSlots !== "undefined" && window.pgyTransientDesktopAdSlots.length >
+        0) {
+        googletag.destroySlots(window.pgyTransientDesktopAdSlots);
+      }
+      if (force_reload) {
+        console.log("Force reloading ads ...");
+        jQuery('.pgy-ad-block').data('adLoaded', "NO");
+        if (typeof window.pgyPersistentDesktopAdSlots !== "undefined" && window.pgyPersistentDesktopAdSlots.length >
+          0) {
+          googletag.destroySlots(window.pgyPersistentDesktopAdSlots);
+        }
+      }
+      jQuery('.pgy-post-ads-wrap').each(function () {
+        var $elem = jQuery(this);
+        var slot_id = (Math.random() * Math.pow(10, 18)).toString(32);
+        var elem_top = $elem.offset().top;
+        var viewport_range_start = jQuery(window).scrollTop();
+        var viewport_range_end = jQuery(window).scrollTop() + jQuery(window).height();
+        if (elem_top >= viewport_range_start && elem_top <= viewport_range_end) {
+          $elem.html(
+            '<div class="pgy-ad-block pgy-ad-block-inline-post-ads" id="pgy-ads-paagal-desktop-inline-posts-' +
+            slot_id +
+            '" style="width: 100%;margin: 0; padding:0;" data-ad-unit="/1005587/pgy-disc-post-adv" data-ad-size="fluid"></div>'
+            );
+          $elem.css({
+            'display': 'flex',
+            'flex-direction': 'row',
+            'justify-content': 'space-evenly',
+            'height': '300px'
+          });
+        } else {
+          $elem.html('<div></div>');
+        }
+      });
+      jQuery('.pgy-ad-block').each(function (index, element) {
+        var $elem = jQuery(this);
+        var is_persistent_ad_block = $elem.hasClass('pgy-ad-persistent');
+        if (is_persistent_ad_block && $elem.data('adLoaded') == "YES") {
+          return;
+        }
+        var adUnit = $elem.data('ad-unit');
+        var adSize = $elem.data('ad-size');
+        if(!(adSize instanceof Array)) {
+          adSize = [adSize];
+        }
+        var adId = $elem.attr('id');
+        $elem.html('');
+        googletag.cmd.push(function () {
+          if (is_persistent_ad_block) {
+            try {
+              window.pgyPersistentDesktopAdSlots[index] = googletag.defineSlot(adUnit, adSize, adId)
+                .addService(googletag.pubads());
+            } catch (e) {
+              console.log(e);
+            }
+          } else {
+            try {
+              window.pgyTransientDesktopAdSlots[index] = googletag.defineSlot(adUnit, adSize, adId)
+                .addService(googletag.pubads());
+            } catch (e) {
+              console.log(e);
+            }
+          }
+          googletag.pubads().enableLazyLoad({
+            // Fetch slots within 5 viewports.
+            fetchMarginPercent: 500,
+            // Render slots within 2 viewports.
+            renderMarginPercent: 200,
+            // Double the above values on mobile, where viewports are smaller
+            // and users tend to scroll faster.
+            mobileScaling: 2.0
+          });
+          googletag.enableServices();
+          googletag.display(adId);
+        });
+        $elem.data('adLoaded', "YES");
+      });
+    };
+    var loadDesktopAds = function () {
+      if (typeof window.googletag === 'undefined') {
+        jQuery.getScript('https://securepubads.g.doubleclick.net/tag/js/gpt.js', populateDesktopAds);
+      } else {
+        populateDesktopAds();
+      }
+    };
+    loadDesktopAds();
+    window['pgyScrollToFixedDesktopAds'] = function () {
+      var options = {
+        marginTop: 30,
+        zIndex: 399
+      };
+      var $footer_element = (jQuery('#signup-cta').length > 0) ? jQuery('.ember-view > .signup-cta:first') : jQuery(
+        '#topic-footer-buttons');
+      options['limit'] = function () {
+        if ($footer_element.length > 0) {
+          return $footer_element.offset().top - jQuery(window).outerHeight() - 20;
+        }
+      };
+      if (jQuery('.nt-leftcolumn').height() > jQuery('.pg-ads-sidebar-left').outerHeight() * 2) {
+        jQuery('.pg-ads-sidebar-left').trigger('detach.ScrollToFixed');
+        jQuery('.pg-ads-sidebar-left').scrollToFixed(options);
+      }
+
+      if (jQuery('.nt-rightcolumn').height() > jQuery('.pg-ads-sidebar-right').outerHeight() * 2) {
+        jQuery('.pg-ads-sidebar-right').trigger('detach.ScrollToFixed');
+        jQuery('.pg-ads-sidebar-right').scrollToFixed(options);
+      }
+    };
+    jQuery.getScript('/pg-static/js/libs/scrolltofixed@1.0.6/jquery-scrolltofixed.min.js', function () {
+      window.pgyScrollToFixedDesktopAds();
+      console.log("Rendering Desktop Ads ...");
+    });
+  };
+
+
+  api.onPageChange((url, title) => {
+    window.pgySetupSearchButton();
+    window.pgySetupTopicLHSDesktopAdSlots();
+    window.pgySetupTopicRHSDesktopAdSlots();
+    window.pgyRenderDesktopAds();
+    if (window.pgyRenderDesktopAdsEventRun) return;
+    window.addEventListener('locationchange', function () {
+      if (window.pgyAdRenderTimeout) clearTimeout(window.pgyAdRenderTimeout);
+      window.pgyAdRenderTimeout = setTimeout(function () {
+        window.pgyRenderDesktopAds(true);
+      }, 1000);
+    });
+    jQuery(window).on('scroll', function () {
+      if (window.pgyAdRenderTimeout) clearTimeout(window.pgyAdRenderTimeout);
+      window.pgyAdRenderTimeout = setTimeout(function () {
+        window.pgyRenderDesktopAds();
+      }, 1000);
+    });
+    window.pgyRenderDesktopAdsEventRun = true;
+  });
+</script>

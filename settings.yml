@@ -1,0 +1,26 @@
+show_on:
+  default: homepage
+  type: enum
+  choices:
+    - top_menu
+    - homepage
+    - all
+  description: top_menu refers to the <a href="/admin/site_settings/category/all_results?filter=top_menu">top menu site setting</a>
+
+hero_background_image:
+  type: upload
+  default: ""
+  description: background image for the banner
+
+tile_background_image: false
+enable_secondary_header: true
+show_for:
+  default: everyone
+  type: enum
+  choices:
+    - everyone
+    - logged_in
+    - logged_out
+
+example_setting:
+  default: true

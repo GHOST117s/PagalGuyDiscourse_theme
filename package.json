@@ -1,0 +1,11 @@
+{
+    "name": "PG-v2",
+    "version": "1.0.1",
+    "repository": "",
+    "author": "sidharth",
+    "license": "MIT",
+    "devDependencies": {
+      "eslint-config-discourse": "^3.2.0"
+    }
+  }
+  

@@ -1,0 +1,106 @@
+<script type="text/discourse-plugin" version="0.8">
+  window.pgyMobileAdSlots = [];
+  window.pgyRenderMobileAdsEventRun = false;
+  window.pgyAdRenderTimeout = false;
+
+  window.pgySetupTopicLHSMobileAdSlots = function () {
+    return; // No Topic LHS Moble Ads
+    var $target = jQuery('#main-outlet .ntt-cat-list .cat-cat');
+    if($target.length < 1 || $target.hasClass('has-pg-ads'))
+      return;
+      $target.append('<div class="pgy-ad-block pgy-ad-persistent" id="pgy-ads-lhs-1" style="width:200px;height:200px;margin:20px auto;" data-ad-unit="/1005587/pg_v9_default_lhs_1" data-ad-size="[200, 200]"></div>');
+      $target.append('<div class="pgy-ad-block pgy-ad-persistent" id="pgy-ads-lhs-2" style="width:200px;height:200px;margin:20px auto;" data-ad-unit="/1005587/pg_v9_default_lhs_2" data-ad-size="[200, 200]"></div>');
+      $target.append('<div style="display: flex; justify-content: space-around; flex-direction: row; align-items: center; flex: 1;"><div class="pgy-ad-block pgy-ad-persistent" id="pgy-ads-rhs-1" style="width:120px;height:240px;margin:20px auto;" data-ad-unit="/1005587/pg_v9_default_rhs_1" data-ad-size="[120, 240]"></div><div class="pgy-ad-block pgy-ad-persistent" id="pgy-ads-rhs-2" style="width:120px;height:240px;margin:20px auto;" data-ad-unit="/1005587/pg_v9_default_rhs_2" data-ad-size="[120, 240]"></div></div>');
+      $target.addClass('has-pg-ads');
+  }
+  window.pgySetupTopicLHSMobileAdSlots();
+
+  window.pgyRenderMobileAds = function () {
+    var populateMobileAds = function () {
+      if (typeof window.pgyMobileAdSlots !== "undefined" && window.pgyMobileAdSlots.length > 0) {
+        googletag.destroySlots(window.pgyMobileAdSlots);
+      }
+      if (typeof window.pgyDesktopAdSlots !== "undefined" && window.pgyDesktopAdSlots.length > 0) {
+        googletag.destroySlots(window.pgyDesktopAdSlots);
+      }
+      if(jQuery('.title-wrapper').length > 0 && !jQuery('.title-wrapper').next().is('.pgy-post-ads-wrap')) {
+        jQuery('.title-wrapper').after('<div class="pgy-post-ads-wrap"></div>');
+      }
+      jQuery('.pgy-post-ads-wrap').each(function () {
+        var $elem = jQuery(this);
+        var slot_id = (Math.random() * Math.pow(10, 18)).toString(32);
+        var elem_top = $elem.offset().top;
+        var viewport_range_start = jQuery(window).scrollTop();
+        var viewport_range_end = jQuery(window).scrollTop() + jQuery(window).height();
+        if (elem_top >= viewport_range_start && elem_top <= viewport_range_end) {
+          $elem.html('<div class="pgy-ad-block pgy-ads-paagal-mobile" id="pgy-ads-paagal-mobile-left-' + slot_id +
+            '" style="width:109px;height:218px;margin:20px 5px; " data-ad-unit="/1005587/Paagal_Mobile_Left" data-ad-size="[109, 218]"></div><div class="pgy-ad-block pgy-ads-paagal-mobile" id="pgy-ads-paagal-mobile-middle-' +
+            slot_id +
+            '" style="width:109px;height:218px;margin:20px 5px;" data-ad-unit="/1005587/Paagal_Mobile_Middle" data-ad-size="[109, 218]"></div><div class="pgy-ad-block pgy-ads-paagal-mobile" id="pgy-ads-paagal-mobile-right-' +
+            slot_id +
+            '" style="width:109px;height:218px;margin:20px 5px;" data-ad-unit="/1005587/Paagal_Mobile_Right" data-ad-size="[109, 218]"></div>'
+          );
+          $elem.css({
+            'display': 'flex',
+            'flex-direction': 'row',
+            'justify-content': 'space-evenly'
+          });
+        } else {
+          $elem.html('<div style="width:109px;height:218px;margin:20px 5px;"></div>');
+        }
+      });
+      jQuery('.pgy-ad-block').each(function (index, element) {
+        var $elem = jQuery(this);
+        var adUnit = $elem.data('ad-unit');
+        var adSize = $elem.data('ad-size');
+        if(!(adSize instanceof Array)) {
+          adSize = [adSize];
+        }
+        var adId = $elem.attr('id');
+        googletag.cmd.push(function () {
+          window.pgyMobileAdSlots[index] = googletag.defineSlot(adUnit, adSize, adId).addService(googletag.pubads());
+          /*
+          googletag.pubads().enableLazyLoad({
+            // Fetch slots within 5 viewports.
+            fetchMarginPercent: 500,
+            // Render slots within 2 viewports.
+            renderMarginPercent: 200,
+            // Double the above values on mobile, where viewports are smaller
+            // and users tend to scroll faster.
+            mobileScaling: 2.0
+          });
+          */
+          googletag.enableServices();
+          googletag.display(adId);
+        });
+      });
+    };
+    var loadMobileAds = function () {
+      if (typeof window.googletag === 'undefined') {
+        jQuery.getScript('https://securepubads.g.doubleclick.net/tag/js/gpt.js', populateMobileAds);
+      } else {
+        populateMobileAds();
+      }
+    };
+    loadMobileAds();
+    console.log("Rendering mobile ads ...");
+  };
+  api.onPageChange((url, title) => {
+    window.pgySetupTopicLHSMobileAdSlots();
+    window.pgyRenderMobileAds();
+    if(window.pgyRenderMobileAdsEventRun) return;
+    window.addEventListener('locationchange', function () {
+      if(window.pgyAdRenderTimeout) clearTimeout(window.pgyAdRenderTimeout);
+      window.pgyAdRenderTimeout = setTimeout(function () {
+        window.pgyRenderMobileAds();
+      }, 1000);
+    });
+    jQuery(window).on('scroll', function () {
+      if(window.pgyAdRenderTimeout) clearTimeout(window.pgyAdRenderTimeout);
+      window.pgyAdRenderTimeout = setTimeout(function () {
+        window.pgyRenderMobileAds();
+      }, 1000);
+    });
+    window.pgyRenderMobileAdsEventRun = true;
+  });
+</script>

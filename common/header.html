@@ -303,19 +303,19 @@
     window.pgyTopicFirstPostMeta();
   });
 
-  window.pgyBadesBtnOnHeader = function() {
+  function pgyBadesBtnOnHeader() {
     try {
-      var someVariable = /*...*/; // Define or get the variable causing the issue
+      // Assuming someVariable is the variable causing the issue
       if (typeof someVariable !== 'undefined' && someVariable !== null) {
-        someVariable = someVariable.replace(/*...*/);
+        someVariable.replace(/*...*/);
       } else {
         console.error('someVariable is undefined or null');
       }
     } catch (error) {
       console.error('Error in pgyBadesBtnOnHeader:', error);
     }
-  };
-  
+  }
+
     var user_href = jQuery('#current-user button').attr('href');
     var current_user_name = user_href.replace("/u/", "");
     

@@ -304,13 +304,18 @@
   });
 
   window.pgyBadesBtnOnHeader = function() {
-    if(jQuery('.d-header .header-buttons .nt-badge-btn').length > 0) {
-      return;
+    try {
+      var someVariable = /*...*/; // Define or get the variable causing the issue
+      if (typeof someVariable !== 'undefined' && someVariable !== null) {
+        someVariable = someVariable.replace(/*...*/);
+      } else {
+        console.error('someVariable is undefined or null');
+      }
+    } catch (error) {
+      console.error('Error in pgyBadesBtnOnHeader:', error);
     }
-    if(jQuery('#current-user').length < 1 ) {
-        return;
-    }
-
+  };
+  
     var user_href = jQuery('#current-user button').attr('href');
     var current_user_name = user_href.replace("/u/", "");
     

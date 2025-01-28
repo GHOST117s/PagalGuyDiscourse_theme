@@ -1,41 +1,42 @@
 <div class="sidebar-content">
- <div class="discourse-sidebar">
-  <div class="sidebar-header">
-    <button class="all-categories-button">
-      all categories
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
-    </button>
-  </div>
-  <div class="sidebar-content">
-    {{#each categories}}
-      <div class="category">
-        <button class="category-button {{#if this.isExpanded}}expanded{{/if}}" data-category-id="{{this.id}}">
-          <div class="category-icon">
-            {{#if (eq this.id "mba")}}
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="graduation-icon"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>
-            {{else}}
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="briefcase-icon"><rect width="20" height="14" x="2" y="7" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
-            {{/if}}
-          </div>
-          <div class="category-info">
-            <div class="category-name">{{this.name}}</div>
-            <div class="category-meta">{{this.count}} • Last Updated: {{this.lastUpdated}}</div>
-          </div>
-          {{#if this.subCategories}}
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
-          {{/if}}
-        </button>
-        {{#if this.subCategories}}
-          <div class="sub-categories {{#if this.isExpanded}}expanded{{/if}}">
-            <div class="sub-categories-grid">
-              {{#each this.subCategories}}
-                <button class="sub-category-button">{{this.name}} {{this.year}}</button>
-              {{/each}}
+  <div class="discourse-sidebar">
+    <div class="sidebar-header">
+      <button class="all-categories-button">
+        all categories
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+      </button>
+    </div>
+    <div class="sidebar-content">
+      {{#each this.categories as |category|}}
+        <div class="category">
+          <button class="category-button {{if category.isExpanded "expanded"}}" data-category-id="{{category.id}}">
+            <div class="category-icon">
+              {{#if (eq category.id "mba")}}
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="graduation-icon"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>
+              {{else}}
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="briefcase-icon"><rect width="20" height="14" x="2" y="7" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+              {{/if}}
             </div>
-          </div>
-        {{/if}}
-      </div>
-    {{/each}}
+            <div class="category-info">
+              <div class="category-name">{{category.name}}</div>
+              <div class="category-meta">{{category.count}} • Last Updated: {{category.lastUpdated}}</div>
+            </div>
+            {{#if category.subCategories}}
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            {{/if}}
+          </button>
+          {{#if category.subCategories}}
+            <div class="sub-categories {{if category.isExpanded "expanded"}}">
+                          <div class="sub-categories-grid">
+
+              {{#each category.subCategories as |subCategory|}}
+                <button class="sub-category-button">{{subCategory.name}} {{subCategory.year}}</button>
+              {{/each}}
+                          </div>
+            </div>
+          {{/if}}
+        </div>
+      {{/each}}
+    </div>
   </div>
-</div>
 </div>

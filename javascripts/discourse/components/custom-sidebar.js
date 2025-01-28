@@ -1,12 +1,14 @@
 import Component from "@ember/component";
+import { action } from "@ember/object";
 
 export default Component.extend({
   tagName: "div",
-  classNames: ["custom-sidebar"]
-});
+  classNames: ["custom-sidebar"],
+  categories: null,
 
-const sidebarData = {
-    categories: [
+  init() {
+    this._super(...arguments);
+    this.set('categories', [
       {
         id: "mba",
         name: "MBA",
@@ -39,5 +41,38 @@ const sidebarData = {
         lastUpdated: "15m ago",
         isExpanded: false,
       },
-    ],
-  };
+    ]);
+  },
+
+  didInsertElement() {
+    this._super(...arguments);
+    this.setupEventListeners();
+  },
+
+  willDestroyElement() {
+    this._super(...arguments);
+    this.teardownEventListeners();
+  },
+
+  setupEventListeners() {
+    const sidebar = this.element.querySelector('.discourse-sidebar');
+    sidebar.addEventListener('click', this.handleCategoryClick);
+  },
+
+  teardownEventListeners() {
+    const sidebar = this.element.querySelector('.discourse-sidebar');
+    sidebar.removeEventListener('click', this.handleCategoryClick);
+  },
+
+  @action
+  handleCategoryClick(event) {
+    const categoryButton = event.target.closest('.category-button');
+    if (categoryButton) {
+      const subCategories = categoryButton.nextElementSibling;
+      if (subCategories && subCategories.classList.contains('sub-categories')) {
+        categoryButton.classList.toggle('expanded');
+        subCategories.classList.toggle('expanded');
+      }
+    }
+  }
+});

@@ -80,9 +80,6 @@
     flex-grow: 1;
     overflow-y: auto;
     padding: 8px;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
 
     .category {
       margin-bottom: 16px;
@@ -154,12 +151,9 @@
         display: none;
         padding-left: 40px;
         margin-top: 4px;
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 8px;
 
         &.expanded {
-          display: grid;
+          display: block;
         }
 
         .sub-category-button {

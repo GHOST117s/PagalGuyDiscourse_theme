@@ -156,6 +156,12 @@
           display: block;
         }
 
+        .sub-categories-grid {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 4px;
+        }
+
         .sub-category-button {
           width: 100%;
           text-align: left;
@@ -163,9 +169,12 @@
           background-color: transparent;
           border: none;
           border-radius: 4px;
-          font-size: 14px;
+          font-size: 12px;
           color: #374151;
           cursor: pointer;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
 
           &:hover {
             background-color: #f3f4f6;

@@ -37,3 +37,141 @@ body.has-sidebar-page {
     rgba(var(--secondary), 1)
   );
 }
+
+
+// 
+.discourse-sidebar {
+  width: 300px;
+  border-right: 1px solid #e5e7eb;
+  background-color: #ffffff;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+
+  .sidebar-header {
+    padding: 8px;
+    border-bottom: 1px solid #e5e7eb;
+
+    .all-categories-button {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 12px;
+      background-color: #f3f4f6;
+      border: 1px solid #d1d5db;
+      border-radius: 4px;
+      font-size: 14px;
+      color: #374151;
+      cursor: pointer;
+
+      &:hover {
+        background-color: #e5e7eb;
+      }
+
+      svg {
+        width: 16px;
+        height: 16px;
+      }
+    }
+  }
+
+  .sidebar-content {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 8px;
+
+    .category {
+      margin-bottom: 16px;
+
+      .category-button {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 8px;
+        background-color: transparent;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        text-align: left;
+
+        &:hover {
+          background-color: #f3f4f6;
+        }
+
+        &.expanded {
+          background-color: #f3f4f6;
+
+          .chevron-down {
+            transform: rotate(180deg);
+          }
+        }
+
+        .category-icon {
+          width: 32px;
+          height: 32px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background-color: rgba(59, 130, 246, 0.1);
+          border-radius: 4px;
+          margin-right: 8px;
+
+          svg {
+            width: 16px;
+            height: 16px;
+            color: #3b82f6;
+          }
+        }
+
+        .category-info {
+          flex-grow: 1;
+
+          .category-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: #111827;
+          }
+
+          .category-meta {
+            font-size: 12px;
+            color: #6b7280;
+          }
+        }
+
+        .chevron-down {
+          width: 16px;
+          height: 16px;
+          transition: transform 0.2s ease-in-out;
+        }
+      }
+
+      .sub-categories {
+        display: none;
+        padding-left: 40px;
+        margin-top: 4px;
+
+        &.expanded {
+          display: block;
+        }
+
+        .sub-category-button {
+          width: 100%;
+          text-align: left;
+          padding: 6px 8px;
+          background-color: transparent;
+          border: none;
+          border-radius: 4px;
+          font-size: 14px;
+          color: #374151;
+          cursor: pointer;
+
+          &:hover {
+            background-color: #f3f4f6;
+          }
+        }
+      }
+    }
+  }
+}
